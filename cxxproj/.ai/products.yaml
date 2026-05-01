@@ -1,0 +1,28 @@
+products:
+  - name: TaiJiMPC
+    frontend:
+      project: TaiJiMPC
+      type: frontend_or_application
+      path: apps/TaiJiMPC
+    backend:
+      host: HostVM
+      modules:
+        - mpc
+
+  - name: xOptCon
+    frontend:
+      project: xOptCon
+      type: frontend_or_application
+      path: apps/xOptCon
+    backend:
+      host: HostVM
+      modules: []
+
+  - name: xRto
+    frontend:
+      project: xRto
+      type: frontend_or_application
+      path: apps/xRto
+    backend:
+      host: HostVM
+      modules: []

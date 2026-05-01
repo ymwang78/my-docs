@@ -1,0 +1,22 @@
+reuse_policy:
+  default: prefer_existing_library
+
+  before_implementing_new_code:
+    required_checks:
+      - search_library_catalog
+      - search_public_headers
+      - search_existing_examples
+      - check_cmake_targets
+
+  forbidden_without_justification:
+    - reimplement_logging
+    - reimplement_networking
+    - reimplement_thread_pool
+    - reimplement_config_parser
+    - reimplement_file_utils
+    - reimplement_string_utils
+
+  ai_required_output:
+    - reused_libraries
+    - searched_existing_components
+    - new_code_justification

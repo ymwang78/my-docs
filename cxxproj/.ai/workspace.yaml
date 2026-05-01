@@ -1,0 +1,48 @@
+workspace:
+  name: cxxproj
+  language: c++
+  build_system: cmake
+
+layout:
+  root: .
+  applications_dir: apps
+  standalone_services_dir: services
+  backend_hosts_dir: hosts
+  hosted_modules_dir: modules
+  public_include_dir: include
+  common_library_source_dir: libsrc
+  binary_library_dir: lib
+  shared_cmake_dir: cmake
+  tools_dir: tools
+
+project_types:
+  frontend_or_application:
+    paths:
+      - apps/*
+
+  standalone_backend_service:
+    paths:
+      - services/*
+
+  backend_host:
+    paths:
+      - hosts/*
+
+  hosted_backend_module:
+    paths:
+      - modules/*
+
+  common_library:
+    paths:
+      - libsrc/*
+
+  developer_tool:
+    paths:
+      - tools/*
+
+rules:
+  root_is_controlled: true
+  ai_must_prefer_existing_libraries: true
+  ai_must_not_modify_shared_cmake_without_approval: true
+  ai_must_not_modify_public_sdk_headers_without_approval: true
+  ai_must_not_modify_binary_libraries: true

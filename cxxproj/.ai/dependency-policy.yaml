@@ -1,0 +1,14 @@
+dependency_policy:
+  external_dependency_rule: require_justification
+
+  platforms:
+    windows:
+      package_manager: vcpkg
+    debian:
+      package_manager: apt
+
+  rules:
+    - Prefer existing internal libraries before adding new external dependencies.
+    - New external dependencies require justification.
+    - New external dependencies must include platform-specific installation information.
+    - New dependencies must mention Windows/vcpkg and Debian/apt impact.

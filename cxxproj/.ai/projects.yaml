@@ -1,0 +1,30 @@
+projects:
+  - name: xMultiFlash
+    type: standalone_backend_service
+    path: services/xMultiFlash
+    language: c++
+    build_system: cmake
+
+    responsibilities:
+      - network_service
+      - request_handling
+      - service_runtime
+      - business_protocol
+
+    not_responsible_for:
+      - qt_frontend_ui
+      - hostvm_module_lifecycle
+      - windows_service_hosting_framework
+      - generic_logging
+      - generic_networking_library
+
+    dependencies:
+      internal:
+        - zce
+
+    ai_rules:
+      - xMultiFlash is an independent network service.
+      - It is not hosted by HostVM.
+      - It must not implement HostVM module APIs unless explicitly required.
+      - It should reuse zce for logging, networking, timers, and common utilities.
+      - It should not place reusable infrastructure code inside the service if it belongs in libsrc.

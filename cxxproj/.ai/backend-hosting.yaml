@@ -1,0 +1,78 @@
+backend_hosting:
+  hosts:
+    - name: HostVM
+      type: backend_host
+      path: hosts/HostVM
+
+      responsibilities:
+        - process_lifecycle
+        - windows_service_integration
+        - module_loading
+        - module_start_stop
+        - configuration_loading
+        - logging_initialization
+        - health_check
+        - shared_backend_runtime
+
+      not_responsible_for:
+        - product_specific_business_logic
+        - frontend_ui
+        - mpc_algorithm
+        - tdb_business_logic
+
+      ai_rules:
+        - HostVM owns process lifecycle and backend hosting infrastructure.
+        - HostVM must not contain product-specific business logic.
+        - Changes to HostVM affect all hosted modules and require careful review.
+        - Windows Service behavior changes require approval.
+        - Module API changes require downstream impact review.
+
+  modules:
+    - id: coin
+      name: coin
+      type: hosted_backend_module
+      path: modules/coin
+      hosted_by: HostVM
+      cmake_target: coin_module
+
+    - id: fgw
+      name: fgw
+      type: hosted_backend_module
+      path: modules/fgw
+      hosted_by: HostVM
+      cmake_target: fgw_module
+
+    - id: ident
+      name: ident
+      type: hosted_backend_module
+      path: modules/ident
+      hosted_by: HostVM
+      cmake_target: ident_module
+
+    - id: mpc
+      name: mpc
+      type: hosted_backend_module
+      path: modules/mpc
+      hosted_by: HostVM
+      cmake_target: mpc_module
+
+    - id: tdb
+      name: tdb
+      type: hosted_backend_module
+      path: modules/tdb
+      hosted_by: HostVM
+      cmake_target: tdb_module
+
+    - id: zjob
+      name: zjob
+      type: hosted_backend_module
+      path: modules/zjob
+      hosted_by: HostVM
+      cmake_target: zjob_module
+
+  module_rules:
+    - Hosted backend modules implement product-specific backend logic.
+    - Hosted backend modules must use HostVM lifecycle/module APIs.
+    - Hosted backend modules must not implement Windows Service integration.
+    - Hosted backend modules must not implement process lifecycle logic.
+    - Hosted backend modules should reuse common libraries from libsrc and public SDK headers from include.
