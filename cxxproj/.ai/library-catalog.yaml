@@ -1,0 +1,1359 @@
+libraries:
+- name: QTExt
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libQTExt
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libQTExt/CMakeLists.txt
+    targets: &id001 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libQTExt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id001
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libQTExt
+  public_api: null
+- name: QWT
+  kind: source_private_binary_distributable_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/QWT
+    include_prefix: QWT/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 0
+      samples: []
+  implementation:
+    source_root: libsrc/libQWT
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  binary:
+    root: lib
+    detected_binaries: []
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libQWT/CMakeLists.txt
+    targets: &id002 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libQWT/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id002
+  ai_usage_rules:
+  - Prefer QWT for capabilities listed in this catalog.
+  - Application projects may include headers from include/QWT.
+  - Standalone services may include headers from include/QWT.
+  - Hosted backend modules may include headers from include/QWT.
+  - Projects must not depend on libsrc/libQWT source files unless explicitly allowed.
+  - Do not modify public QWT headers unless the task explicitly requests an API change.
+  - Do not modify libsrc/libQWT unless the task explicitly targets QWT internals.
+  - If new functionality duplicates QWT capabilities, justify why QWT cannot be reused.
+  metadata:
+    scanned: true
+    source_directory_name: libQWT
+- name: QtAds
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/QtAds
+    include_prefix: QtAds/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 23
+      samples:
+      - include/QtAds/AutoHideDockContainer.h
+      - include/QtAds/AutoHideSideBar.h
+      - include/QtAds/AutoHideTab.h
+      - include/QtAds/DockAreaTabBar.h
+      - include/QtAds/DockAreaTitleBar.h
+      - include/QtAds/DockAreaTitleBar_p.h
+      - include/QtAds/DockAreaWidget.h
+      - include/QtAds/DockComponentsFactory.h
+      - include/QtAds/DockContainerWidget.h
+      - include/QtAds/DockFocusController.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id003 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id003
+  ai_usage_rules:
+  - This library exposes public headers under include/QtAds.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: SolverIpopt
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libSolverIpopt
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libSolverIpopt/CMakeLists.txt
+    targets: &id004 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libSolverIpopt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id004
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libSolverIpopt
+  public_api: null
+- name: SolverSnopt
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libSolverSnopt
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libSolverSnopt/CMakeLists.txt
+    targets: &id005 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libSolverSnopt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id005
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libSolverSnopt
+  public_api: null
+- name: asl
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/asl
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: true
+      include_dir: false
+      src_dir: true
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/asl/CMakeLists.txt
+    targets: &id006
+    - name: arithchk
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - m
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - NO_FPINIT
+        - NO_SSIZE_T
+        - ASL_NO_FPINITMT
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(arithchk ${SRCDIR}/solvers/arithchk.c ${FPINIT})
+    - name: ${name}
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - m
+        public:
+        - ${CMAKE_DL_LIBS}
+        interface: []
+      include_dirs:
+        private: []
+        public:
+        - $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
+        - $<BUILD_INTERFACE:${sourcedir}>
+        - $<INSTALL_INTERFACE:include>
+        - ${PAR_INCLUDE}
+        - ${OpenMP_C_INCLUDE_DIRS}
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public:
+        - ${MY_COMPILE_DEFINITIONS}
+        interface: []
+      raw_commands:
+      - add_library(${name} STATIC ${${sources}} ${GENERATED_INCLUDE_DIR}/arith.h)
+      original_kind: STATIC
+    - name: aslcpp
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - m
+        public:
+        - asl
+        - ${CMAKE_DL_LIBS}
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(aslcpp STATIC ${ASL_CPP_SOURCES} ${ASL_CPP_HEADERS} ${ASL_HEADERS})
+      original_kind: STATIC
+    warnings: []
+    primary_target: ${name}
+    scanned_targets: *id006
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: asl
+  public_api: null
+- name: hasp
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libhasp
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libhasp/CMakeLists.txt
+    targets: &id007 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libhasp/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id007
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libhasp
+  public_api: null
+- name: hdcode
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/hdcode
+    include_prefix: hdcode/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 19
+      samples:
+      - include/hdcode/HD_CommonDef.h
+      - include/hdcode/aes/aes.h
+      - include/hdcode/aes/aes_via_ace.h
+      - include/hdcode/aes/aescpp.h
+      - include/hdcode/aes/aesopt.h
+      - include/hdcode/aes/aestab.h
+      - include/hdcode/aes/brg_endian.h
+      - include/hdcode/aes/brg_types.h
+      - include/hdcode/aes/rdtsc.h
+      - include/hdcode/md5encrypt.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id008 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id008
+  ai_usage_rules:
+  - This library exposes public headers under include/hdcode.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: idh
+  kind: source_private_binary_distributable_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/idh
+    include_prefix: idh/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 1
+      samples:
+      - include/idh/libidh.h
+  implementation:
+    source_root: libsrc/libidh
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: true
+      include_dir: true
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  binary:
+    root: lib
+    detected_binaries: []
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libidh/CMakeLists.txt
+    targets: &id009
+    - name: libidh_static
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - ws2_32
+        - iphlpapi
+        - shlwapi
+        - ole32
+        - oleaut32
+        - uuid
+        - pthread
+        - dl
+        - ${ZCE_LIB_PATH}
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${LIBBSON_LIBS}
+        - ${MBED_LIBS}
+        - dl
+        - pthread
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - uuid
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - dl
+        - pthread
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${ZCE_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPEN62541_INCLUDE_DIRS}
+        - ${LIBBSON_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh_static STATIC ${LIBIDH_SOURCES} ${LIBIDH_HEADERS})
+      original_kind: STATIC
+      output_name: idh
+    - name: libidh_shared
+      type: shared_library
+      source_command: add_library
+      links:
+        private:
+        - ws2_32
+        - iphlpapi
+        - shlwapi
+        - ole32
+        - oleaut32
+        - uuid
+        - pthread
+        - dl
+        - -Wl,--whole-archive
+        - ${ZCE_LIB_PATH}
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${MBED_LIBS}
+        - -Wl,--no-whole-archive
+        - ${LIBBSON_LIBS}
+        - dl
+        - pthread
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - uuid
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - dl
+        - pthread
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${ZCE_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPEN62541_INCLUDE_DIRS}
+        - ${LIBBSON_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh_shared SHARED ${LIBIDH_SOURCES} ${LIBIDH_HEADERS})
+      original_kind: SHARED
+      output_name: idh
+    - name: libidh
+      type: alias
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh ALIAS libidh_static)
+      original_kind: ALIAS
+      aliased_target: libidh_static
+    - name: test_libidh_unit
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - libidh_static
+        - -Wl,--start-group
+        - ${ZDL_LIB_PATH}
+        - ${ZCE_LIB_PATH}
+        - -Wl,--end-group
+        - Python3::Python
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${LIBBSON_LIBS}
+        - dl
+        - pthread
+        - GTest::gtest
+        - GTest::gtest_main
+        - libidh_static
+        - -Wl,--start-group
+        - ${ZDL_LIB_PATH}
+        - ${ZCE_LIB_PATH}
+        - -Wl,--end-group
+        - Python3::Python
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - ${LIBUUID_TEST}
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - pthread
+        - dl
+        - z
+        - GTest::gtest
+        - GTest::gtest_main
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${ZCE_INCLUDE_DIR}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - USE_GTEST_MAIN
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_libidh_unit gtest/test_libidh_unit.cpp)
+    warnings: []
+    primary_target: libidh_static
+    scanned_targets: *id009
+  ai_usage_rules:
+  - Prefer idh for capabilities listed in this catalog.
+  - Application projects may include headers from include/idh.
+  - Standalone services may include headers from include/idh.
+  - Hosted backend modules may include headers from include/idh.
+  - Projects must not depend on libsrc/libidh source files unless explicitly allowed.
+  - Do not modify public idh headers unless the task explicitly requests an API change.
+  - Do not modify libsrc/libidh unless the task explicitly targets idh internals.
+  - If new functionality duplicates idh capabilities, justify why idh cannot be reused.
+  metadata:
+    scanned: true
+    source_directory_name: libidh
+- name: lexilla
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/lexilla
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: true
+      src_dir: true
+      tests_dir: false
+      test_dir: true
+      examples_dir: true
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/lexilla/CMakeLists.txt
+    targets: &id010 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/lexilla/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id010
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: lexilla
+  public_api: null
+- name: oracle
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/oracle
+    include_prefix: oracle/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 30
+      samples:
+      - include/oracle/ldap.h
+      - include/oracle/nzerror.h
+      - include/oracle/nzt.h
+      - include/oracle/occi.h
+      - include/oracle/occiAQ.h
+      - include/oracle/occiCommon.h
+      - include/oracle/occiControl.h
+      - include/oracle/occiData.h
+      - include/oracle/occiObjects.h
+      - include/oracle/oci.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id011 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id011
+  ai_usage_rules:
+  - This library exposes public headers under include/oracle.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: pbc
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libpbc
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: true
+      tests_dir: false
+      test_dir: true
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libpbc/CMakeLists.txt
+    targets: &id012 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libpbc/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id012
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libpbc
+  public_api: null
+- name: pybind11
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/pybind11
+    include_prefix: pybind11/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 53
+      samples:
+      - include/pybind11/attr.h
+      - include/pybind11/buffer_info.h
+      - include/pybind11/cast.h
+      - include/pybind11/chrono.h
+      - include/pybind11/common.h
+      - include/pybind11/complex.h
+      - include/pybind11/conduit/pybind11_conduit_v1.h
+      - include/pybind11/conduit/pybind11_platform_abi_id.h
+      - include/pybind11/conduit/wrap_include_python_h.h
+      - include/pybind11/critical_section.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id013 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id013
+  ai_usage_rules:
+  - This library exposes public headers under include/pybind11.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: scintilla
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/scintilla
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: true
+      src_dir: true
+      tests_dir: false
+      test_dir: true
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/scintilla/CMakeLists.txt
+    targets: &id014 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/scintilla/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id014
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: scintilla
+  public_api: null
+- name: utp
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libutp
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libutp/CMakeLists.txt
+    targets: &id015 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libutp/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id015
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libutp
+  public_api: null
+- name: win32
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/win32
+    include_prefix: win32/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 289
+      samples:
+      - include/win32/dirent.h
+      - include/win32/libavcodec/ac3_parser.h
+      - include/win32/libavcodec/adts_parser.h
+      - include/win32/libavcodec/avcodec.h
+      - include/win32/libavcodec/avdct.h
+      - include/win32/libavcodec/avfft.h
+      - include/win32/libavcodec/bsf.h
+      - include/win32/libavcodec/codec.h
+      - include/win32/libavcodec/codec_desc.h
+      - include/win32/libavcodec/codec_id.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id016 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id016
+  ai_usage_rules:
+  - This library exposes public headers under include/win32.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: x64
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/x64
+    include_prefix: x64/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 1805
+      samples:
+      - include/x64/asl2/arith.h
+      - include/x64/asl2/asl.h
+      - include/x64/asl2/asl_pfg.h
+      - include/x64/asl2/asl_pfgh.h
+      - include/x64/asl2/avltree.h
+      - include/x64/asl2/errchk.h
+      - include/x64/asl2/funcadd.h
+      - include/x64/asl2/getstub.h
+      - include/x64/asl2/jac2dim.h
+      - include/x64/asl2/jacpdim.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id017 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id017
+  ai_usage_rules:
+  - This library exposes public headers under include/x64.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: xOpt
+  kind: source_private_binary_distributable_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/xOpt
+    include_prefix: xOpt/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 4
+      samples:
+      - include/xOpt/xOptInterface.h
+      - include/xOpt/xOptModel.h
+      - include/xOpt/xOptProblem.h
+      - include/xOpt/xOptSolver.h
+  implementation:
+    source_root: libsrc/xOpt
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: true
+      include_dir: false
+      src_dir: true
+      tests_dir: false
+      test_dir: true
+      examples_dir: false
+  binary:
+    root: lib
+    detected_binaries: []
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: xOpt
+    cmakelists: libsrc/xOpt/CMakeLists.txt
+    targets: &id018
+    - name: xOpt
+      type: shared_library
+      source_command: add_library
+      links:
+        private:
+        - Python3::Python
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - XOPT_EXPORTS
+        - _CRT_SECURE_NO_WARNINGS
+        - $<$<CONFIG:Debug>:_DEBUG>
+        - $<$<CONFIG:Release>:NDEBUG>
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(xOpt SHARED ${SOURCES})
+      original_kind: SHARED
+      output_name: xOpt
+    warnings: []
+    primary_target: xOpt
+    scanned_targets: *id018
+  ai_usage_rules:
+  - Prefer xOpt for capabilities listed in this catalog.
+  - Application projects may include headers from include/xOpt.
+  - Standalone services may include headers from include/xOpt.
+  - Hosted backend modules may include headers from include/xOpt.
+  - Projects must not depend on libsrc/xOpt source files unless explicitly allowed.
+  - Do not modify public xOpt headers unless the task explicitly requests an API change.
+  - Do not modify libsrc/xOpt unless the task explicitly targets xOpt internals.
+  - If new functionality duplicates xOpt capabilities, justify why xOpt cannot be
+    reused.
+  metadata:
+    scanned: true
+    source_directory_name: xOpt
+- name: xOptInc
+  kind: header_only_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/xOptInc
+    include_prefix: xOptInc/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 9
+      samples:
+      - include/xOptInc/xOpt.h
+      - include/xOptInc/xOptModelBase.h
+      - include/xOptInc/xOptModelBlackBox.h
+      - include/xOptInc/xOptModelComp.h
+      - include/xOptInc/xOptModelFixVars.h
+      - include/xOptInc/xOptModelProblemWithDesc.h
+      - include/xOptInc/xOptModelPython.h
+      - include/xOptInc/xOptModelSym.h
+      - include/xOptInc/xOptUnit.h
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: ''
+    targets: &id019 []
+    warnings: []
+    primary_target: null
+    scanned_targets: *id019
+  ai_usage_rules:
+  - This library exposes public headers under include/xOptInc.
+  - Do not modify public headers unless explicitly scoped.
+  metadata:
+    scanned: true
+- name: zce
+  kind: source_private_binary_distributable_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/zce
+    include_prefix: zce/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 92
+      samples:
+      - include/zce/base64.h
+      - include/zce/gep_stream.h
+      - include/zce/http_stream.h
+      - include/zce/optional.hpp
+      - include/zce/ptp_node.h
+      - include/zce/ptp_proto.h
+      - include/zce/ptp_proto_pack.h
+      - include/zce/ptp_stream.h
+      - include/zce/ptp_transport.h
+      - include/zce/rtmp_stream.h
+  implementation:
+    source_root: libsrc/libzce
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: true
+      include_dir: true
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  binary:
+    root: lib
+    detected_binaries: []
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: zce
+    cmakelists: libsrc/libzce/CMakeLists.txt
+    targets: &id020
+    - name: zce
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - ${MINIZIP_LIBRARIES}
+        - nlohmann_json::nlohmann_json
+        - BZip2::BZip2
+        - uriparser
+        - PostgreSQL::PostgreSQL
+        - expat::expat
+        - ${expat_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        - BZip2::BZip2
+        - ${PG_LINK_LIBRARIES}
+        - ${MINIZIP_LINK_LIBRARIES}
+        - ${LIBUV_LINK_LIBRARIES}
+        - nlohmann_json::nlohmann_json
+        - ${uriparser_LINK_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/..
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        - /usr/include
+        - /usr/local/include
+        - /usr/local/include/python3.13
+        - /usr/local/openssl/include
+        - /usr/include/lua5.4
+        - /usr/include/python3.13
+        - /usr/include/postgresql
+        - /usr/include/libbson-1.0
+        - /opt/homebrew/include
+        - /opt/homebrew/include/libbson-1.0
+        - /opt/homebrew/include/bson-2.2.4
+        - /opt/homebrew/include/mongoc-2.2.4
+        - /opt/homebrew/opt/libuv/include
+        - /opt/homebrew/opt/libpq/include
+        - /opt/homebrew/opt/libpq/include/postgresql
+        - /opt/homebrew/opt/postgresql@18/include
+        - /opt/homebrew/opt/postgresql@18/include/postgresql
+        - ${PostgreSQL_INCLUDE_DIRS}
+        - ${PG_INCLUDE_DIRS}
+        - ${expat_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - ZCE_SUPPORT_PYVM=0
+        - ZCE_SUPPORT_LUAVM=0
+        - ZCE_SUPPORT_CCVM=0
+        - ZCE_ZDB_PGSQL=0
+        - ZCE_ZDB_SQLITE=0
+        - ZCE_ZDB_REDIS=0
+        - __WINDOWS__
+        - HAVE_MEMMOVE
+        - NDEBUG
+        - OBJECT_MONITOR
+        - __LINUX__
+        - HAVE_MEMMOVE
+        - NDEBUG
+        - OBJECT_MONITOR
+        - LUA_USE_LINUX
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+    warnings: []
+    primary_target: zce
+    scanned_targets: *id020
+  ai_usage_rules:
+  - Prefer zce for capabilities listed in this catalog.
+  - Application projects may include headers from include/zce.
+  - Standalone services may include headers from include/zce.
+  - Hosted backend modules may include headers from include/zce.
+  - Projects must not depend on libsrc/libzce source files unless explicitly allowed.
+  - Do not modify public zce headers unless the task explicitly requests an API change.
+  - Do not modify libsrc/libzce unless the task explicitly targets zce internals.
+  - If new functionality duplicates zce capabilities, justify why zce cannot be reused.
+  metadata:
+    scanned: true
+    source_directory_name: libzce
+- name: zdl
+  kind: source_private_binary_distributable_library
+  status: active
+  source: scan
+  capabilities: []
+  public_api:
+    headers_root: include/zdl
+    include_prefix: zdl/
+    distributable: true
+    stability: stable
+    shared_with_external_teams: true
+    detected_headers:
+      count: 12
+      samples:
+      - include/zdl/zdl_builtin.h
+      - include/zdl/zdl_enum.h
+      - include/zdl/zdl_member.h
+      - include/zdl/zdl_module.h
+      - include/zdl/zdl_ofstream.h
+      - include/zdl/zdl_parser.h
+      - include/zdl/zdl_parser_context.h
+      - include/zdl/zdl_struct.h
+      - include/zdl/zdl_template_arg.h
+      - include/zdl/zdl_type.h
+  implementation:
+    source_root: libsrc/libzdl
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: true
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  binary:
+    root: lib
+    detected_binaries: []
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: zdl
+    cmakelists: libsrc/libzdl/CMakeLists.txt
+    targets: &id021
+    - name: zdl
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - WIN32
+        - NDEBUG
+        - _LIB
+        - ZDP
+        - _CRT_SECURE_NO_WARNINGS
+        - YY_NEVER_INTERACTIVE
+        - __LINUX__
+        - NDEBUG
+        - ZDP
+        - HAVE_MEMMOVE
+        - DBZ_NO_STDIO
+        - OBJECT_MONITOR
+        - _REENTRANT
+        - __PLATFORM__
+        - YY_NEVER_INTERACTIVE
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+    - name: zdl_parser_regression_test
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - zdl
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${ZCE_LIB_FOR_ZDL_TEST}
+        - ${LIBUV_FOR_ZDL_TEST}
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${BZIP2_LIBRARIES}
+        - pthread
+        - dl
+        - z
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${PLATFORM_SOLUTION_DIR}/include/linux
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - USE_GTEST_MAIN
+        - ZDL_TEST_SAMPLE_DIR=
+        - ${CMAKE_CURRENT_SOURCE_DIR}/gtest/samples
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(zdl_parser_regression_test ${CMAKE_CURRENT_SOURCE_DIR}/gtest/test_parser_regression.cpp
+        )
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: zdl
+    scanned_targets: *id021
+  ai_usage_rules:
+  - Prefer zdl for capabilities listed in this catalog.
+  - Application projects may include headers from include/zdl.
+  - Standalone services may include headers from include/zdl.
+  - Hosted backend modules may include headers from include/zdl.
+  - Projects must not depend on libsrc/libzdl source files unless explicitly allowed.
+  - Do not modify public zdl headers unless the task explicitly requests an API change.
+  - Do not modify libsrc/libzdl unless the task explicitly targets zdl internals.
+  - If new functionality duplicates zdl capabilities, justify why zdl cannot be reused.
+  metadata:
+    scanned: true
+    source_directory_name: libzdl
+- name: zlib
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libzlib
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libzlib/CMakeLists.txt
+    targets: &id022 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libzlib/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id022
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libzlib
+  public_api: null
+- name: zlic
+  kind: source_library
+  status: active
+  source: scan
+  capabilities: []
+  implementation:
+    source_root: libsrc/libzlic
+    shared_with_external_teams: false
+    default_access: readonly
+    detected_files:
+      cmakelists: false
+      include_dir: false
+      src_dir: false
+      tests_dir: false
+      test_dir: false
+      examples_dir: false
+  cmake:
+    header_target: null
+    binary_target: null
+    source_target: null
+    cmakelists: libsrc/libzlic/CMakeLists.txt
+    targets: &id023 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libzlic/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id023
+  ai_usage_rules:
+  - This is a common source library under libsrc.
+  - Do not modify it unless the task explicitly targets this library.
+  metadata:
+    scanned: true
+    source_directory_name: libzlic
+  public_api: null

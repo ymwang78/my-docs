@@ -1,30 +1,3035 @@
 projects:
-  - name: xMultiFlash
-    type: standalone_backend_service
-    path: services/xMultiFlash
-    language: c++
-    build_system: cmake
-
-    responsibilities:
-      - network_service
-      - request_handling
-      - service_runtime
-      - business_protocol
-
-    not_responsible_for:
-      - qt_frontend_ui
-      - hostvm_module_lifecycle
-      - windows_service_hosting_framework
-      - generic_logging
-      - generic_networking_library
-
-    dependencies:
-      internal:
+- name: TaiJiMPC
+  type: frontend_or_application
+  path: apps/TaiJiMPC
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: true
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a frontend/application project.
+  - Do not modify backend services, HostVM, modules, libsrc, include, cmake, or lib
+    unless explicitly scoped.
+  cmake:
+    cmakelists: apps/TaiJiMPC/CMakeLists.txt
+    targets: &id001 []
+    warnings:
+    - 'CMakeLists.txt not found: apps/TaiJiMPC/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id001
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs: []
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+- name: xOptCon
+  type: frontend_or_application
+  path: apps/xOptCon
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: false
+    tests_dir: true
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a frontend/application project.
+  - Do not modify backend services, HostVM, modules, libsrc, include, cmake, or lib
+    unless explicitly scoped.
+  cmake:
+    cmakelists: apps/xOptCon/CMakeLists.txt
+    targets: &id002
+    - name: xApc
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - Qt6::Core
+        - Qt6::Widgets
+        - Qt6::Gui
+        - Qt6::Concurrent
+        - Qt6::PrintSupport
+        - Qt6::Svg
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../../libsrc/libzce/libzce.a
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../../libsrc/libidh/build/lib/libidh.a
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${LIBUV_LIBRARIES}
+        - bz2
+        - pthread
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${LIBUV_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - QT_WIDGETS_LIB
+        - QT_GUI_LIB
+        - QT_CORE_LIB
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(xApc ${SOURCES} ${HEADERS})
+    warnings: []
+    primary_target: xApc
+    scanned_targets: *id002
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - tests
+    example_dirs:
+    - examples
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs:
+    - bin
+    - build
+    ignored_dirs: []
+- name: xRto
+  type: frontend_or_application
+  path: apps/xRto
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a frontend/application project.
+  - Do not modify backend services, HostVM, modules, libsrc, include, cmake, or lib
+    unless explicitly scoped.
+  cmake:
+    cmakelists: apps/xRto/CMakeLists.txt
+    targets: &id003
+    - name: xRto
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - Qt${QT_VERSION_MAJOR}::Core
+        - Qt${QT_VERSION_MAJOR}::Gui
+        - Qt${QT_VERSION_MAJOR}::Widgets
+        - Qt${QT_VERSION_MAJOR}::Charts
+        - Qt${QT_VERSION_MAJOR}::DataVisualization
+        - Qt${QT_VERSION_MAJOR}::Qml
+        - Qt${QT_VERSION_MAJOR}::Svg
+        - Python3::Python
+        - ${LUA_LIBRARIES}
+        - ws2_32
+        - iphlpapi
+        - shlwapi
+        - Psapi
+        - Crypt32
+        - UserEnv
+        - dbghelp
+        - xOptStatic
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${UI_FILES} ${RESOURCE_FILES})
+      raw_name: ${PROJECT_NAME}
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id003
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs: []
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+- name: xMultiFlash
+  type: standalone_backend_service
+  path: services/xMultiFlash
+  language: c++
+  build_system: cmake
+  responsibilities:
+  - network_service
+  - request_handling
+  - service_runtime
+  - business_protocol
+  not_responsible_for:
+  - qt_frontend_ui
+  - hostvm_module_lifecycle
+  - windows_service_hosting_framework
+  - generic_logging
+  - generic_networking_library
+  dependencies:
+    internal:
+    - zce
+  ai_rules:
+  - xMultiFlash is an independent network service.
+  - It is not hosted by HostVM.
+  - It must not implement HostVM module APIs unless explicitly required.
+  - It should reuse zce for logging, networking, timers, and common utilities.
+  - It should not place reusable infrastructure code inside the service if it belongs
+    in libsrc.
+  source: scan
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  status: active
+  cmake:
+    cmakelists: services/xMultiFlash/CMakeLists.txt
+    targets: &id004 []
+    warnings:
+    - 'CMakeLists.txt not found: services/xMultiFlash/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id004
+- name: HostVM
+  type: backend_host
+  path: hosts/HostVM
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - HostVM owns process lifecycle and backend hosting infrastructure.
+  - HostVM must not contain product-specific business logic.
+  cmake:
+    cmakelists: hosts/HostVM/CMakeLists.txt
+    targets: &id005
+    - name: hostvm.bin
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - idh
+        - zmpc
         - zce
-
-    ai_rules:
-      - xMultiFlash is an independent network service.
-      - It is not hosted by HostVM.
-      - It must not implement HostVM module APIs unless explicitly required.
-      - It should reuse zce for logging, networking, timers, and common utilities.
-      - It should not place reusable infrastructure code inside the service if it belongs in libsrc.
+        - uriparser
+        - zdl
+        - python313
+        - hiredis_ssl
+        - hiredis
+        - ssl
+        - crypto
+        - pgtypes
+        - ecpg
+        - pq
+        - uv
+        - uuid
+        - zlib
+        - bz2
+        - expat::expat
+        - ${expat_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        - ${HOSTVM_LINK_LIBS}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/hostvm/src
+        - ${expat_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(hostvm.bin ${HOSTVM_SOURCES})
+    - name: hostctrl
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - zce
+        - uriparser
+        - zdl
+        - hiredis_ssl
+        - hiredis
+        - ssl
+        - crypto
+        - pgtypes
+        - ecpg
+        - pq
+        - uv
+        - uuid
+        - zlib
+        - bz2
+        - expat::expat
+        - ${expat_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        - ${HOSTVM_LINK_LIBS}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/..
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../libsrc
+        - ${expat_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(hostctrl hostctrl/main.cpp )
+    warnings: []
+    primary_target: hostvm.bin
+    scanned_targets: *id005
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs: []
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs:
+    - bin
+    - build
+    ignored_dirs: []
+- name: coin
+  type: hosted_backend_module
+  path: modules/coin
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: false
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: coin_module
+  cmake:
+    cmakelists: modules/coin/CMakeLists.txt
+    targets: &id006
+    - name: coin
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/src
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - WIN32
+        - NDEBUG
+        - _CONSOLE
+        - _LIB
+        - ZDP
+        - ICE_CPP11_MAPPING
+        - _CRT_SECURE_NO_WARNINGS
+        - __LINUX__
+        - NDEBUG
+        - NODEBUG
+        - ZDP
+        - ICE_CPP11_MAPPING
+        - OBJECT_MONITOR
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+      output_name: coin
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id006
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs: []
+    ignored_dirs: []
+- name: fgw
+  type: hosted_backend_module
+  path: modules/fgw
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: fgw_module
+  cmake:
+    cmakelists: modules/fgw/CMakeLists.txt
+    targets: &id007
+    - name: fgw
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/src
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - FGW_USE_LIBUTP=1
+        - WIN32
+        - NDEBUG
+        - _LIB
+        - ZDP
+        - _CRT_SECURE_NO_WARNINGS
+        - __LINUX__
+        - NDEBUG
+        - NODEBUG
+        - ZDP
+        - OBJECT_MONITOR
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+      output_name: zfgw
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id007
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs:
+    - out
+    ignored_dirs: []
+- name: ident
+  type: hosted_backend_module
+  path: modules/ident
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: ident_module
+  cmake:
+    cmakelists: modules/ident/CMakeLists.txt
+    targets: &id008
+    - name: ident
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/src
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - WIN32
+        - NDEBUG
+        - _LIB
+        - ZDP
+        - _CRT_SECURE_NO_WARNINGS
+        - __LINUX__
+        - NDEBUG
+        - NODEBUG
+        - ZDP
+        - OBJECT_MONITOR
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id008
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs:
+    - examples
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs: []
+    ignored_dirs: []
+- name: mpc
+  type: hosted_backend_module
+  path: modules/mpc
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: true
+    src_dir: true
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: mpc_module
+  cmake:
+    cmakelists: modules/mpc/CMakeLists.txt
+    targets: &id009
+    - name: mpc
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${CMAKE_CURRENT_SOURCE_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/src
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../libident/src
+        - ${Python3_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - WIN32
+        - NDEBUG
+        - _LIB
+        - ZDP
+        - _CRT_SECURE_NO_WARNINGS
+        - __LINUX__
+        - NDEBUG
+        - NODEBUG
+        - ZDP
+        - OBJECT_MONITOR
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+      output_name: zmpc
+    - name: mpc_test
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - mpc
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${MPC_TEST_LINK_LIBS}
+        - mpc
+        - GTest::gtest
+        - GTest::gtest_main
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/src
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${PLATFORM_SOLUTION_DIR}/include/linux
+        - ${OPEN62541_MPC_INCLUDES}
+        - ${LIBBSON_MPC_INCLUDES}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - USE_GTEST_MAIN
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(mpc_test ${CMAKE_CURRENT_SOURCE_DIR}/gtest/libmpc_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gtest/idh_test_stubs.cpp ${CMAKE_CURRENT_SOURCE_DIR}/gtest/zce_test_stubs.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gtest/zds_pack_test_specializations.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/zmpc_pack.cpp
+        )
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id009
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs: []
+    ignored_dirs: []
+- name: tdb
+  type: hosted_backend_module
+  path: modules/tdb
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: true
+    src_dir: true
+    tests_dir: true
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: tdb_module
+  cmake:
+    cmakelists: modules/tdb/CMakeLists.txt
+    targets: &id010
+    - name: xtdb_core
+      type: unknown_library
+      source_command: add_library
+      links:
+        private: []
+        public:
+        - SQLite::SQLite3
+        - ${ZSTD_TARGET}
+        - ZLIB::ZLIB
+        - ${THREAD_LIB}
+        - ${CXXPROJ_PATH}/libsrc/libzce/build/libzce.a
+        interface: []
+      include_dirs:
+        private: []
+        public:
+        - ${CMAKE_SOURCE_DIR}/include
+        - ${CMAKE_SOURCE_DIR}/internal
+        - ${CXXPROJ_PATH}/include
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - XTDB_HAVE_SSE42
+        - XTDB_HAVE_AVX2
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(xtdb_core src/core/layout_calculator.cpp src/core/aligned_io.cpp
+        src/core/state_mutator.cpp src/core/wal_writer.cpp src/core/wal_reader.cpp
+        src/core/rotating_wal.cpp src/core/wal_flush_adapter.cpp src/core/mem_buffer.cpp
+        src/core/block_writer.cpp src/core/directory_builder.cpp src/core/directory_cache.cpp
+        src/core/chunk_sealer.cpp src/core/raw_scanner.cpp src/core/block_reader.cpp
+        src/core/metadata_sync.cpp src/core/storage_engine.cpp src/core/swinging_door_encoder.cpp
+        src/core/swinging_door_decoder.cpp src/core/quantized_16_encoder.cpp src/core/quantized_16_decoder.cpp
+        src/core/gorilla_encoder.cpp src/core/gorilla_decoder.cpp src/core/delta_of_delta_encoder.cpp
+        src/core/delta_of_delta_decoder.cpp src/core/resampling_engine.cpp src/core/archive_manager.cpp
+        src/core/thread_pool.cpp src/core/container.cpp src/core/file_container.cpp
+        src/core/block_device_container.cpp src/core/container_manager.cpp src/core/compressor.cpp
+        src/core/compressor_zstd.cpp src/core/compact_container.cpp src/core/compact_archiver.cpp
+        src/core/compact_archive_manager.cpp src/core/block_accessor.cpp src/core/crc32c.cpp
+        src/core/crc32c_sse42.cpp src/core/simd/quant16_avx2.cpp )
+    - name: xtdb_api
+      type: unknown_library
+      source_command: add_library
+      links:
+        private: []
+        public:
+        - xtdb_core
+        interface: []
+      include_dirs:
+        private: []
+        public:
+        - ${CMAKE_SOURCE_DIR}/include
+        - ${CMAKE_SOURCE_DIR}/internal
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(xtdb_api src/api/xtdb_api.cpp )
+    - name: api_example
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(api_example examples/api_example.c )
+    - name: test_alignment
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_alignment tests/test_alignment.cpp )
+    - name: test_layout
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_layout tests/test_layout.cpp )
+    - name: test_struct_size
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_struct_size tests/test_struct_size.cpp )
+    - name: test_state_machine
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_state_machine tests/test_state_machine.cpp )
+    - name: test_write_path
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_write_path tests/test_write_path.cpp )
+    - name: test_seal_directory
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_seal_directory tests/test_seal_directory.cpp )
+    - name: test_read_recovery
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_read_recovery tests/test_read_recovery.cpp )
+    - name: test_end_to_end
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_end_to_end tests/test_end_to_end.cpp )
+    - name: test_per_tag_tracking
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_per_tag_tracking tests/test_per_tag_tracking.cpp )
+    - name: test_restart_consistency
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_restart_consistency tests/test_restart_consistency.cpp
+        )
+    - name: test_write_coordinator
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_write_coordinator tests/test_write_coordinator.cpp )
+    - name: test_read_coordinator
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_read_coordinator tests/test_read_coordinator.cpp )
+    - name: test_hybrid_debug
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_hybrid_debug tests/test_hybrid_debug.cpp )
+    - name: test_maintenance
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_maintenance tests/test_maintenance.cpp )
+    - name: test_swinging_door
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_swinging_door tests/test_swinging_door.cpp )
+    - name: test_compression_e2e
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compression_e2e tests/test_compression_e2e.cpp )
+    - name: test_quantized_16
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_quantized_16 tests/test_quantized_16.cpp )
+    - name: test_resampling
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_resampling tests/test_resampling.cpp )
+    - name: test_small_chunk
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_small_chunk tests/test_small_chunk.cpp )
+    - name: test_compression_integration
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compression_integration tests/test_compression_integration.cpp
+        )
+    - name: test_multi_resolution_query
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_multi_resolution_query tests/test_multi_resolution_query.cpp
+        )
+    - name: test_performance_benchmark
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_performance_benchmark tests/test_performance_benchmark.cpp
+        )
+    - name: test_crash_recovery
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_crash_recovery tests/test_crash_recovery.cpp )
+    - name: test_large_scale_simulation
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_large_scale_simulation tests/test_large_scale_simulation.cpp
+        )
+    - name: test_rotating_wal
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_rotating_wal tests/test_rotating_wal.cpp )
+    - name: test_container_abstraction
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_container_abstraction tests/test_container_abstraction.cpp
+        )
+    - name: test_block_device_integration
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_block_device_integration tests/test_block_device_integration.cpp
+        )
+    - name: test_block_device_advanced
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_block_device_advanced tests/test_block_device_advanced.cpp
+        )
+    - name: test_compressor
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compressor tests/test_compressor.cpp )
+    - name: test_compact_struct
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compact_struct tests/test_compact_struct.cpp )
+    - name: test_compact_minimal
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compact_minimal tests/test_compact_minimal.cpp )
+    - name: test_compact_container
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compact_container tests/test_compact_container.cpp )
+    - name: test_compact_archiver
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compact_archiver tests/test_compact_archiver.cpp )
+    - name: test_archive_workflow
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_archive_workflow tests/test_archive_workflow.cpp )
+    - name: test_block_accessor
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - SQLite::SQLite3
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_block_accessor tests/test_block_accessor.cpp)
+    - name: test_out_of_order_writes
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - SQLite::SQLite3
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_out_of_order_writes tests/test_out_of_order_writes.cpp)
+    - name: test_cursor_api
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_cursor_api tests/test_cursor_api.cpp)
+    - name: test_disk_full
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_SOURCE_DIR}/include
+        - ${CMAKE_SOURCE_DIR}/internal
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - XTDB_ENABLE_FAULT_INJECTION
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_disk_full tests/test_disk_full.cpp src/api/xtdb_api.cpp
+        )
+    - name: test_quality_weighted_agg
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_quality_weighted_agg tests/test_quality_weighted_agg.cpp
+        )
+    - name: test_batch_write
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_batch_write tests/test_batch_write.cpp )
+    - name: test_cross_chunk_query
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_cross_chunk_query tests/test_cross_chunk_query.cpp )
+    - name: test_compression_benchmark
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_compression_benchmark tests/test_compression_benchmark.cpp
+        )
+    - name: test_backpressure
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_backpressure tests/test_backpressure.cpp )
+    - name: xtdb_bench
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - xtdb_api
+        - xtdb_core
+        - ${THREAD_LIB}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/internal
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(xtdb_bench tools/xtdb_bench.cpp)
+    warnings: []
+    primary_target: xtdb_core
+    scanned_targets: *id010
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - tests
+    example_dirs:
+    - examples
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+- name: zjob
+  type: hosted_backend_module
+  path: modules/zjob
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: true
+    src_dir: true
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a hosted backend module.
+  - It is hosted by HostVM.
+  - It must not implement Windows Service integration.
+  - It must not implement process lifecycle.
+  - It is not a common library.
+  hosted_by: HostVM
+  cmake_target: zjob_module
+  cmake:
+    cmakelists: modules/zjob/CMakeLists.txt
+    targets: &id011 []
+    warnings:
+    - 'CMakeLists.txt not found: modules/zjob/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id011
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs: []
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs: []
+    ignored_dirs: []
+- name: asl
+  type: common_library
+  path: libsrc/asl
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/asl if declared in library-catalog.yaml.
+  cmake:
+    cmakelists: libsrc/asl/CMakeLists.txt
+    targets: &id012
+    - name: arithchk
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - m
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - NO_FPINIT
+        - NO_SSIZE_T
+        - ASL_NO_FPINITMT
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(arithchk ${SRCDIR}/solvers/arithchk.c ${FPINIT})
+    - name: ${name}
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - m
+        public:
+        - ${CMAKE_DL_LIBS}
+        interface: []
+      include_dirs:
+        private: []
+        public:
+        - $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
+        - $<BUILD_INTERFACE:${sourcedir}>
+        - $<INSTALL_INTERFACE:include>
+        - ${PAR_INCLUDE}
+        - ${OpenMP_C_INCLUDE_DIRS}
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public:
+        - ${MY_COMPILE_DEFINITIONS}
+        interface: []
+      raw_commands:
+      - add_library(${name} STATIC ${${sources}} ${GENERATED_INCLUDE_DIR}/arith.h)
+      original_kind: STATIC
+    - name: aslcpp
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - m
+        public:
+        - asl
+        - ${CMAKE_DL_LIBS}
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(aslcpp STATIC ${ASL_CPP_SOURCES} ${ASL_CPP_HEADERS} ${ASL_HEADERS})
+      original_kind: STATIC
+    warnings: []
+    primary_target: arithchk
+    scanned_targets: *id012
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs: []
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs:
+    - build
+    ignored_dirs: []
+- name: lexilla
+  type: common_library
+  path: libsrc/lexilla
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: true
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/lexilla if declared in library-catalog.yaml.
+  cmake:
+    cmakelists: libsrc/lexilla/CMakeLists.txt
+    targets: &id013 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/lexilla/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id013
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs:
+    - examples
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+- name: QTExt
+  type: common_library
+  path: libsrc/libQTExt
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/QTExt if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libQTExt
+  cmake:
+    cmakelists: libsrc/libQTExt/CMakeLists.txt
+    targets: &id014 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libQTExt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id014
+  status: active
+- name: QWT
+  type: common_library
+  path: libsrc/libQWT
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/QWT if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libQWT
+  cmake:
+    cmakelists: libsrc/libQWT/CMakeLists.txt
+    targets: &id015 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libQWT/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id015
+  status: active
+- name: SolverIpopt
+  type: common_library
+  path: libsrc/libSolverIpopt
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/SolverIpopt if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libSolverIpopt
+  cmake:
+    cmakelists: libsrc/libSolverIpopt/CMakeLists.txt
+    targets: &id016 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libSolverIpopt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id016
+  status: active
+- name: SolverSnopt
+  type: common_library
+  path: libsrc/libSolverSnopt
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/SolverSnopt if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libSolverSnopt
+  cmake:
+    cmakelists: libsrc/libSolverSnopt/CMakeLists.txt
+    targets: &id017 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libSolverSnopt/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id017
+  status: active
+- name: hasp
+  type: common_library
+  path: libsrc/libhasp
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/hasp if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libhasp
+  cmake:
+    cmakelists: libsrc/libhasp/CMakeLists.txt
+    targets: &id018 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libhasp/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id018
+  status: active
+- name: idh
+  type: common_library
+  path: libsrc/libidh
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: true
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/idh if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libidh
+  cmake:
+    cmakelists: libsrc/libidh/CMakeLists.txt
+    targets: &id019
+    - name: libidh_static
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - ws2_32
+        - iphlpapi
+        - shlwapi
+        - ole32
+        - oleaut32
+        - uuid
+        - pthread
+        - dl
+        - ${ZCE_LIB_PATH}
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${LIBBSON_LIBS}
+        - ${MBED_LIBS}
+        - dl
+        - pthread
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - uuid
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - dl
+        - pthread
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${ZCE_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPEN62541_INCLUDE_DIRS}
+        - ${LIBBSON_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh_static STATIC ${LIBIDH_SOURCES} ${LIBIDH_HEADERS})
+      original_kind: STATIC
+      output_name: idh
+    - name: libidh_shared
+      type: shared_library
+      source_command: add_library
+      links:
+        private:
+        - ws2_32
+        - iphlpapi
+        - shlwapi
+        - ole32
+        - oleaut32
+        - uuid
+        - pthread
+        - dl
+        - -Wl,--whole-archive
+        - ${ZCE_LIB_PATH}
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${MBED_LIBS}
+        - -Wl,--no-whole-archive
+        - ${LIBBSON_LIBS}
+        - dl
+        - pthread
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - uuid
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - dl
+        - pthread
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${ZCE_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPENSSL_INCLUDE_DIR}
+        - ${OPEN62541_INCLUDE_DIRS}
+        - ${LIBBSON_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh_shared SHARED ${LIBIDH_SOURCES} ${LIBIDH_HEADERS})
+      original_kind: SHARED
+      output_name: idh
+    - name: libidh
+      type: alias
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(libidh ALIAS libidh_static)
+      original_kind: ALIAS
+      aliased_target: libidh_static
+    - name: test_libidh_unit
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - libidh_static
+        - -Wl,--start-group
+        - ${ZDL_LIB_PATH}
+        - ${ZCE_LIB_PATH}
+        - -Wl,--end-group
+        - Python3::Python
+        - ${OPENSSL_SSL_LIBRARY}
+        - ${OPENSSL_CRYPTO_LIBRARY}
+        - ${OPEN62541_LIBS}
+        - ${LIBBSON_LIBS}
+        - dl
+        - pthread
+        - GTest::gtest
+        - GTest::gtest_main
+        - libidh_static
+        - -Wl,--start-group
+        - ${ZDL_LIB_PATH}
+        - ${ZCE_LIB_PATH}
+        - -Wl,--end-group
+        - Python3::Python
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${OPEN62541_LIBRARIES}
+        - bz2
+        - ${LIBUUID_TEST}
+        - uriparser
+        - uv
+        - ${LIBBSON_LIBRARIES}
+        - pthread
+        - dl
+        - z
+        - GTest::gtest
+        - GTest::gtest_main
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${ZCE_INCLUDE_DIR}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - USE_GTEST_MAIN
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(test_libidh_unit gtest/test_libidh_unit.cpp)
+    warnings: []
+    primary_target: libidh_static
+    scanned_targets: *id019
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs: []
+    ignored_dirs: []
+- name: pbc
+  type: common_library
+  path: libsrc/libpbc
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/pbc if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libpbc
+  cmake:
+    cmakelists: libsrc/libpbc/CMakeLists.txt
+    targets: &id020 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libpbc/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id020
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs: []
+    ignored_dirs: []
+- name: utp
+  type: common_library
+  path: libsrc/libutp
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/utp if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libutp
+  cmake:
+    cmakelists: libsrc/libutp/CMakeLists.txt
+    targets: &id021 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libutp/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id021
+  status: active
+- name: zce
+  type: common_library
+  path: libsrc/libzce
+  structure:
+    style: multi_module_common_library
+    public_api_dirs:
+    - include/zce
+    - libsrc/libzce/include
+    source_dirs:
+    - libsrc/libzce/core
+    - libsrc/libzce/log
+    - libsrc/libzce/mat
+    - libsrc/libzce/mcp
+    - libsrc/libzce/rsa
+    - libsrc/libzce/rtmp
+    - libsrc/libzce/sec
+    - libsrc/libzce/text
+    - libsrc/libzce/xml
+    - libsrc/libzce/zdb
+    - libsrc/libzce/zdp
+    - libsrc/libzce/zds
+    - libsrc/libzce/zvm
+    - libsrc/libzce/zwt
+    test_dirs:
+    - libsrc/libzce/gtest
+    example_dirs:
+    - libsrc/libzce/exp
+    - libsrc/libzce/dummy
+    build_output_dirs:
+    - libsrc/libzce/bin
+    ignored_or_tool_dirs:
+    - libsrc/libzce/.git
+    - libsrc/libzce/.cursor
+    - libsrc/libzce/libzce.xcodeproj
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: true
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/zce if declared in library-catalog.yaml.
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs:
+    - exp
+    - dummy
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+  metadata:
+    directory_name: libzce
+  status: active
+  cmake:
+    cmakelists: libsrc/libzce/CMakeLists.txt
+    targets: &id022
+    - name: zce
+      type: static_library
+      source_command: add_library
+      links:
+        private:
+        - ${MINIZIP_LIBRARIES}
+        - nlohmann_json::nlohmann_json
+        - BZip2::BZip2
+        - uriparser
+        - PostgreSQL::PostgreSQL
+        - expat::expat
+        - ${expat_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        - BZip2::BZip2
+        - ${PG_LINK_LIBRARIES}
+        - ${MINIZIP_LINK_LIBRARIES}
+        - ${LIBUV_LINK_LIBRARIES}
+        - nlohmann_json::nlohmann_json
+        - ${uriparser_LINK_LIBRARIES}
+        - EXPAT::EXPAT
+        - ${EXPAT_LIBRARIES}
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${CMAKE_CURRENT_SOURCE_DIR}/..
+        - ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        - /usr/include
+        - /usr/local/include
+        - /usr/local/include/python3.13
+        - /usr/local/openssl/include
+        - /usr/include/lua5.4
+        - /usr/include/python3.13
+        - /usr/include/postgresql
+        - /usr/include/libbson-1.0
+        - /opt/homebrew/include
+        - /opt/homebrew/include/libbson-1.0
+        - /opt/homebrew/include/bson-2.2.4
+        - /opt/homebrew/include/mongoc-2.2.4
+        - /opt/homebrew/opt/libuv/include
+        - /opt/homebrew/opt/libpq/include
+        - /opt/homebrew/opt/libpq/include/postgresql
+        - /opt/homebrew/opt/postgresql@18/include
+        - /opt/homebrew/opt/postgresql@18/include/postgresql
+        - ${PostgreSQL_INCLUDE_DIRS}
+        - ${PG_INCLUDE_DIRS}
+        - ${expat_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        - ${EXPAT_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - ZCE_SUPPORT_PYVM=0
+        - ZCE_SUPPORT_LUAVM=0
+        - ZCE_SUPPORT_CCVM=0
+        - ZCE_ZDB_PGSQL=0
+        - ZCE_ZDB_SQLITE=0
+        - ZCE_ZDB_REDIS=0
+        - __WINDOWS__
+        - HAVE_MEMMOVE
+        - NDEBUG
+        - OBJECT_MONITOR
+        - __LINUX__
+        - HAVE_MEMMOVE
+        - NDEBUG
+        - OBJECT_MONITOR
+        - LUA_USE_LINUX
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+    warnings: []
+    primary_target: zce
+    scanned_targets: *id022
+- name: zdl
+  type: common_library
+  path: libsrc/libzdl
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/zdl if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libzdl
+  cmake:
+    cmakelists: libsrc/libzdl/CMakeLists.txt
+    targets: &id023
+    - name: zdl
+      type: static_library
+      source_command: add_library
+      links:
+        private: []
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - WIN32
+        - NDEBUG
+        - _LIB
+        - ZDP
+        - _CRT_SECURE_NO_WARNINGS
+        - YY_NEVER_INTERACTIVE
+        - __LINUX__
+        - NDEBUG
+        - ZDP
+        - HAVE_MEMMOVE
+        - DBZ_NO_STDIO
+        - OBJECT_MONITOR
+        - _REENTRANT
+        - __PLATFORM__
+        - YY_NEVER_INTERACTIVE
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(${PROJECT_NAME} STATIC ${LIB_SOURCES})
+      raw_name: ${PROJECT_NAME}
+      original_kind: STATIC
+    - name: zdl_parser_regression_test
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - zdl
+        - GTest::gtest
+        - GTest::gtest_main
+        - ${ZCE_LIB_FOR_ZDL_TEST}
+        - ${LIBUV_FOR_ZDL_TEST}
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - ${BZIP2_LIBRARIES}
+        - pthread
+        - dl
+        - z
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${PLATFORM_SOLUTION_DIR}/include/linux
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - USE_GTEST_MAIN
+        - ZDL_TEST_SAMPLE_DIR=
+        - ${CMAKE_CURRENT_SOURCE_DIR}/gtest/samples
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(zdl_parser_regression_test ${CMAKE_CURRENT_SOURCE_DIR}/gtest/test_parser_regression.cpp
+        )
+    warnings:
+    - primary_target ${PROJECT_NAME} is not present in scanned targets.
+    primary_target: ${PROJECT_NAME}
+    scanned_targets: *id023
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - gtest
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs: []
+    ignored_dirs: []
+- name: zlib
+  type: common_library
+  path: libsrc/libzlib
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/zlib if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libzlib
+  cmake:
+    cmakelists: libsrc/libzlib/CMakeLists.txt
+    targets: &id024 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libzlib/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id024
+  status: active
+- name: zlic
+  type: common_library
+  path: libsrc/libzlic
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: false
+    src_dir: false
+    tests_dir: false
+    test_dir: false
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/zlic if declared in library-catalog.yaml.
+  metadata:
+    directory_name: libzlic
+  cmake:
+    cmakelists: libsrc/libzlic/CMakeLists.txt
+    targets: &id025 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/libzlic/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id025
+  status: active
+- name: scintilla
+  type: common_library
+  path: libsrc/scintilla
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: false
+    include_dir: true
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: false
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/scintilla if declared in library-catalog.yaml.
+  cmake:
+    cmakelists: libsrc/scintilla/CMakeLists.txt
+    targets: &id026 []
+    warnings:
+    - 'CMakeLists.txt not found: libsrc/scintilla/CMakeLists.txt'
+    primary_target: null
+    scanned_targets: *id026
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs:
+    - bin
+    ignored_dirs: []
+- name: xOpt
+  type: common_library
+  path: libsrc/xOpt
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: false
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: true
+  ai_rules:
+  - This is a common source library.
+  - Public SDK headers may live under include/xOpt if declared in library-catalog.yaml.
+  cmake:
+    cmakelists: libsrc/xOpt/CMakeLists.txt
+    targets: &id027
+    - name: xOpt
+      type: shared_library
+      source_command: add_library
+      links:
+        private:
+        - Python3::Python
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - XOPT_EXPORTS
+        - _CRT_SECURE_NO_WARNINGS
+        - $<$<CONFIG:Debug>:_DEBUG>
+        - $<$<CONFIG:Release>:NDEBUG>
+        public: []
+        interface: []
+      raw_commands:
+      - add_library(xOpt SHARED ${SOURCES})
+      original_kind: SHARED
+      output_name: xOpt
+    warnings: []
+    primary_target: xOpt
+    scanned_targets: *id027
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs: []
+    build_output_dirs: []
+    ignored_dirs: []
+- name: zGen
+  type: developer_tool
+  path: tools/zGen
+  source: scan
+  build_system: cmake
+  detected_files:
+    cmakelists: true
+    include_dir: true
+    src_dir: true
+    tests_dir: false
+    test_dir: true
+    readme: true
+  ai_rules:
+  - This is a developer tool.
+  - Keep changes under tools/zGen unless explicitly scoped.
+  cmake:
+    cmakelists: tools/zGen/CMakeLists.txt
+    targets: &id028
+    - name: zgen
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - ${LIBZDL}
+        - ${LIBZCE}
+        - Boost::program_options
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - Python3::Python
+        - ${BZIP2_LIBRARIES}
+        - ${LIBUV_LIBRARIES}
+        - ${LIBUUID}
+        - pthread
+        - dl
+        - z
+        public: []
+        interface: []
+      include_dirs:
+        private: []
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private:
+        - GE_V3
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(zgen ${ZGEN_SOURCES})
+    - name: zgen_test
+      type: executable
+      source_command: add_executable
+      links:
+        private:
+        - ${LIBZDL}
+        - ${LIBZCE}
+        - OpenSSL::SSL
+        - OpenSSL::Crypto
+        - Python3::Python
+        - ${BZIP2_LIBRARIES}
+        - ${LIBUV_LIBRARIES}
+        - ${BSON_LIBRARIES}
+        - ${LIBUUID}
+        - pthread
+        - dl
+        - z
+        public: []
+        interface: []
+      include_dirs:
+        private:
+        - ${CMAKE_CURRENT_SOURCE_DIR}/include
+        - ${PLATFORM_SOLUTION_DIR}/include
+        - ${BSON_INCLUDE_DIRS}
+        public: []
+        interface: []
+      compile_features:
+        private: []
+        public: []
+        interface: []
+      compile_definitions:
+        private: []
+        public: []
+        interface: []
+      raw_commands:
+      - add_executable(zgen_test ${TEST_SRC_DIR}/test.cpp ${TEST_SRC_DIR}/test_pack.cpp
+        ${TEST_SRC_DIR}/test_bsonpack.cpp )
+    warnings: []
+    primary_target: zgen
+    scanned_targets: *id028
+  status: active
+  path_hints:
+    source_dirs: []
+    test_dirs:
+    - test
+    example_dirs: []
+    public_api_dirs: []
+    internal_include_dirs:
+    - include
+    build_output_dirs: []
+    ignored_dirs: []
