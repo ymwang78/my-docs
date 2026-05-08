@@ -12,8 +12,8 @@
 
 本文覆盖三部分：
 
-- 离线建模工具
-- `xOptCon` 中的组态与在线模块
+- `xOptCon` 中的 `SoftSensorOfflineProject` 建模工程
+- `xOptCon` 中的 `SoftSensorOnlineProject` 组态/在线工程
 - HostVM 侧在线运行时
 
 说明：
@@ -38,7 +38,12 @@
 - 远程通信机制：`ZDP RPC + Storm 广播`
 - 工业曲线与表格界面基础：`Qt6 Widgets + QWT`
 
-结论：SoftSensor 最合理的落地方式不是塞进 `TaijiMPC`，而是作为一个新的项目类型，与 `TaijiMPC` 并列挂接到 `xOptCon` 中。
+结论：SoftSensor 最合理的落地方式不是塞进 `TaijiMPC`，而是拆成两个新的 project 类型并列挂接到 `xOptCon` 中：
+
+- `SoftSensorOfflineProject`
+- `SoftSensorOnlineProject`
+
+它们与 `TaijiMPCProject` 处于同一层级。
 
 ### 2.2 当前必须正视的架构硬编码
 
@@ -62,44 +67,51 @@
 
 ## 3. 目标产品形态
 
-建议最终产品拆成 4 个逻辑子系统：
+建议最终产品拆成 5 个逻辑子系统：
 
-1. `xSoftSensor Studio`
-离线建模桌面工具，负责数据导入、清洗、时滞/时常搜索、变量筛选、模型训练、评估、导出模型包。
+1. `SoftSensorOfflineProject`
+作为 `xOptCon` 中的本地建模工程类型，负责数据导入、清洗、时滞/时常搜索、变量筛选、模型训练、评估、导出模型包。
 
-2. `xOptCon SoftSensor`
-作为 `xOptCon` 中的新项目类型，负责模型导入、通讯配置、位号映射、校正策略、脚本、在线监控与维护。
+2. `SoftSensorOnlineProject`
+作为 `xOptCon` 中的组态/在线工程类型，负责模型导入、通讯配置、位号映射、校正策略、脚本、在线监控与维护。
 
-3. `SoftSensor HostVM Runtime`
+3. `Python Training Worker`
+作为 `SoftSensorOfflineProject` 的本地算法 sidecar，执行重计算任务。
+
+4. `SoftSensor HostVM Runtime`
 部署在服务端，执行实时采样、预处理、推断、校正、报警、日志、历史缓存，并通过 RPC/Storm 与前端通信。
 
-4. `softsensor-core`
+5. `softsensor-core`
 共享核心库，统一数据模型、模型包格式、预处理逻辑、推断接口、校正算法和序列化协议。
 
 整体关系如下：
 
 ```text
-+------------------------+        导出 .ssmdl         +-----------------------------+
-| xSoftSensor Studio     | -------------------------> | xOptCon SoftSensor Project  |
-| 离线建模工具           |                            | 组态/在线前端               |
-+------------------------+                            +-------------+---------------+
-        |                                                              |
-        | 本地训练任务                                                  | ZDP RPC / Storm
-        v                                                              v
-+------------------------+                            +-----------------------------+
-| Python Training Worker |                            | SoftSensor HostVM Runtime   |
-| 算法训练与搜索         |                            | 实时采样/推断/校正          |
-+------------------------+                            +-------------+---------------+
-        ^                                                              ^
-        |                                                              |
-        +-------------------------- softsensor-core --------------------+
++----------------------------------------------------------------------------------+
+| xOptCon                                                                          |
+|                                                                                  |
+|  +-----------------------------+        导出 .ssmdl        +-------------------+ |
+|  | SoftSensorOfflineProject    | ------------------------> | SoftSensorOnline  | |
+|  | 本地建模工程                |                           | Project           | |
+|  +--------------+--------------+                           | 组态/在线工程     | |
+|                 |                                          +---------+---------+ |
+|                 | QProcess / 文件交换                                |           |
++-----------------|----------------------------------------------------|-----------+
+                  v                                                    v
+        +---------------------------+                        +----------------------+
+        | Python Training Worker    |                        | SoftSensor HostVM    |
+        | 训练/搜索/导出 .ssmdl     |                        | Runtime              |
+        +-------------+-------------+                        | 实时采样/推断/校正  |
+                      ^                                      +----------+-----------+
+                      |                                                 ^
+                      +---------------- softsensor-core -----------------+
 ```
 
 ## 4. 总体设计原则
 
 ### 4.1 架构原则
 
-- 前后端分层明确：离线训练重计算，在线推断重稳定，不混在一套进程里。
+- 前后端分层明确：离线建模重计算，在线推断重稳定，不混在一套执行环境里。
 - UI 与算法解耦：Qt 前端只负责流程编排和结果展示，不承担复杂模型训练。
 - 模型包标准化：离线与在线之间只通过标准模型包 `.ssmdl` 交互。
 - 在线侧最小依赖：HostVM 运行时不依赖 Python，避免 7x24 运行中的环境不稳定。
@@ -137,7 +149,8 @@ framework/
 ```text
 applications/
   TaijiMPC/
-  SoftSensor/
+  SoftSensorOffline/
+  SoftSensorOnline/
 ```
 
 职责：
@@ -157,21 +170,21 @@ libraries/
 如果短期不想改动工程结构过大，第一版也可以先放在：
 
 ```text
-applications/SoftSensor/core/
+applications/shared/softsensor-core/
 ```
 
-但中期必须抽离出来，供以下两端共享：
+但中期必须抽离出来，供以下三端共享：
 
-- `xSoftSensor Studio`
+- `SoftSensorOfflineProject`
+- `SoftSensorOnlineProject`
 - `SoftSensor HostVM Runtime`
 
 ### 5.4 算法训练层
 
-建议独立成 Python sidecar：
+建议作为 `SoftSensorOfflineProject` 调用的 Python sidecar：
 
 ```text
 tools/
-  SoftSensorStudio/
   softsensor_worker/
 ```
 
@@ -206,7 +219,41 @@ hostvm/
 
 这部分是 SoftSensor 开发的 Phase 0。
 
-### 6.1 新增通用远程项目接口
+### 6.1 先支持“本地工程类型 + 远程工程类型”共存
+
+这是这次需求变化后的前置条件。
+
+当前 `xOptCon` 基本假设项目都挂在 `ProjectHost` 下，且大多是远程实例。若 `SoftSensorOfflineProject`
+要作为与 `TaijiMPCProject`、`SoftSensorOnlineProject` 并列的 project 类型，则框架必须支持两类工程：
+
+- 本地工程类型：例如 `SoftSensorOfflineProject`
+- 远程工程类型：例如 `TaijiMPCProject`、`SoftSensorOnlineProject`
+
+建议采用“本地宿主”方案，尽量少动现有主框架：
+
+- 在 `Solution` 下引入内置 `LocalProjectHost`，例如显示为 `Local Workspace`
+- `SoftSensorOfflineProject` 创建在该本地宿主下，不依赖 RPC/Storm
+- `TaijiMPCProject` 和 `SoftSensorOnlineProject` 继续创建在远程 `ProjectHost` 下
+
+建议给 `ProjectFactory::ProjectTypeInfo` 增加部署模式字段：
+
+```cpp
+enum class ProjectDeployMode {
+    LocalOnly,
+    RemoteOnly
+};
+```
+
+```cpp
+struct ProjectTypeInfo {
+    ...
+    ProjectDeployMode deployMode;
+};
+```
+
+这样 `NewProjectWizard`、树节点、打开工程流程都能根据类型决定落到本地还是远程宿主。
+
+### 6.2 新增通用远程项目接口
 
 建议新增：
 
@@ -241,7 +288,7 @@ public:
 - `IProject` 继续保留通用 UI/项目生命周期接口
 - `IRemoteProject` 解决当前远程实例初始化、连接、广播路由被写死到 `TaijiMPC` 的问题
 
-### 6.2 泛化 Tree Model 和角色定义
+### 6.3 泛化 Tree Model 和角色定义
 
 建议修改：
 
@@ -257,7 +304,7 @@ public:
 
 不再把树节点绑定到具体 `TaijiMPCModel*`。
 
-### 6.3 泛化实例树节点
+### 6.4 泛化实例树节点
 
 建议删除“每个项目类型一个树节点类”的做法，改为统一 `GenericInstanceTreeItem`：
 
@@ -271,7 +318,7 @@ std::function<QString(const zdp_base::zvm_t&)> instanceStatusTextProvider;
 std::function<QIcon(const zdp_base::zvm_t&)> instanceStatusIconProvider;
 ```
 
-### 6.4 泛化 MainWindow 的项目打开逻辑
+### 6.5 泛化 MainWindow 的项目打开逻辑
 
 当前 `MainWindow::onInstanceOpen()` 直接围绕 `TaijiMPCProject` 和 `TaijiMPCModel` 展开。
 
@@ -282,7 +329,7 @@ std::function<QIcon(const zdp_base::zvm_t&)> instanceStatusIconProvider;
 3. 连接成功后统一走 `switchToProject()`
 4. `switchToProject()` 只依赖 `IProject::createMainWidget()`
 
-### 6.5 泛化 Storm 广播路由
+### 6.6 泛化 Storm 广播路由
 
 当前 `InstanceService.cpp` 里按 `TaijiMPCProject -> TaijiMPCModel -> ZMpcRuntime` 路由。
 
@@ -299,63 +346,102 @@ std::function<QIcon(const zdp_base::zvm_t&)> instanceStatusIconProvider;
 建议新增目录：
 
 ```text
-applications/SoftSensor/
-  SoftSensorPlugin.cpp
-  SoftSensorProject.h
-  SoftSensorProject.cpp
-  SoftSensorModel.h
-  SoftSensorModel.cpp
-  SoftSensorView.h
-  SoftSensorView.cpp
-  zssm/
-    ZSoftSensorRuntime.h
-    ZSoftSensorRuntime.cpp
-    zssm_proto.h
-    zssm_pack.h
-  core/
-    SoftSensorTypes.h
-    SoftSensorModelPackage.h
-    SoftSensorPreprocessor.h
-    SoftSensorInferenceEngine.h
-    SoftSensorCalibrationEngine.h
-  views/
-    configure/
-      ConfigureGeneralView.*
-      ConfigureDataSourceView.*
-      ConfigureTagMappingView.*
-      ConfigureCorrectionView.*
-      ConfigureScriptView.*
-      ConfigureAlarmView.*
-    online/
-      RuntimeOverviewView.*
-      TrendView.*
-      CalibrationView.*
-      QualityView.*
-      EventLogView.*
-    model/
-      ModelSummaryView.*
-      ModelVariableView.*
-  widgets/
-    PredictionTrendWidget.*
-    QualityBadgeWidget.*
-    CalibrationTableWidget.*
+applications/
+  SoftSensorOffline/
+    SoftSensorOfflinePlugin.cpp
+    SoftSensorOfflineProject.h
+    SoftSensorOfflineProject.cpp
+    SoftSensorOfflineModel.h
+    SoftSensorOfflineModel.cpp
+    SoftSensorOfflineView.h
+    SoftSensorOfflineView.cpp
+    workflow/
+      DataImportPage.*
+      DataCleaningPage.*
+      DynamicPreselectionPage.*
+      VariableSelectionPage.*
+      DynamicFineselectionPage.*
+      ObjectModelingPage.*
+      EvaluationExportPage.*
+  SoftSensorOnline/
+    SoftSensorOnlinePlugin.cpp
+    SoftSensorOnlineProject.h
+    SoftSensorOnlineProject.cpp
+    SoftSensorOnlineModel.h
+    SoftSensorOnlineModel.cpp
+    SoftSensorOnlineView.h
+    SoftSensorOnlineView.cpp
+    zssm/
+      ZSoftSensorRuntime.h
+      ZSoftSensorRuntime.cpp
+      zssm_proto.h
+      zssm_pack.h
+    views/
+      configure/
+        ConfigureGeneralView.*
+        ConfigureDataSourceView.*
+        ConfigureTagMappingView.*
+        ConfigureCorrectionView.*
+        ConfigureScriptView.*
+        ConfigureAlarmView.*
+      online/
+        RuntimeOverviewView.*
+        TrendView.*
+        CalibrationView.*
+        QualityView.*
+        EventLogView.*
+      model/
+        ModelSummaryView.*
+        ModelVariableView.*
+    widgets/
+      PredictionTrendWidget.*
+      QualityBadgeWidget.*
+      CalibrationTableWidget.*
+libraries/
+  softsensor-core/
 ```
 
 ## 8. 软测量项目对象设计
 
 ### 8.1 项目类型定义
 
-建议定义：
+建议明确拆成两个 project 类型：
 
-- `typeId = "SoftSensor"`
-- `typeName = "Soft Sensor"`
+#### `SoftSensorOfflineProject`
+
+- `typeId = "SoftSensorOffline"`
+- `typeName = "Soft Sensor Modeling"`
+- `deployMode = LocalOnly`
+- `fileExtension = "ssmproj"`
+
+说明：
+
+- 这是本地工程类型
+- 挂在 `LocalProjectHost` 下
+- 持有数据集、清洗参数、搜索参数、训练结果和导出产物引用
+
+#### `SoftSensorOnlineProject`
+
+- `typeId = "SoftSensorOnline"`
+- `typeName = "Soft Sensor Online"`
+- `deployMode = RemoteOnly`
 - `vmtype = "SoftSensor"`
 - `fileExtension = "sscfg"`
 - 远程配置文件名：`_config.zssm`
 
 ### 8.2 关键类职责
 
-#### `SoftSensorProject`
+#### `SoftSensorOfflineProject`
+
+职责：
+
+- 实现本地建模工程的 `IProject`
+- 管理七步建模流程
+- 维护数据集、实验、参数和中间结果缓存
+- 调用 `Python Training Worker`
+- 导出 `.ssmdl`
+
+#### `SoftSensorOnlineProject`
 
 职责：
 
@@ -364,11 +450,11 @@ applications/SoftSensor/
 - 创建主界面与属性页
 - 承接 `MainWindow` 和 `ProjectHost` 的通用项目操作
 
-#### `SoftSensorModel`
+#### `SoftSensorOnlineModel`
 
 职责：
 
-- 持有 `SoftSensorProjectFull`
+- 持有 `SoftSensorOnlineProjectFull`
 - 管理 RPC 调用
 - 管理前端缓存数据
 - 响应 Storm 广播
@@ -377,14 +463,14 @@ applications/SoftSensor/
 建议定义：
 
 ```cpp
-struct SoftSensorProjectFull {
-    SoftSensorProjectConfig config;
-    SoftSensorProjectRuntime runtime;
+struct SoftSensorOnlineProjectFull {
+    SoftSensorOnlineProjectConfig config;
+    SoftSensorOnlineProjectRuntime runtime;
     SoftSensorModelPackageMeta modelMeta;
 };
 ```
 
-#### `SoftSensorView`
+#### `SoftSensorOnlineView`
 
 职责：
 
@@ -392,9 +478,18 @@ struct SoftSensorProjectFull {
 - 统一标签页导航
 - 脏数据刷新与当前视图局部更新
 
+#### `SoftSensorOfflineView`
+
+职责：
+
+- 组织建模七步流程页
+- 展示数据质量、特征筛选和训练评估结果
+- 管理后台训练任务状态
+- 导出标准模型包
+
 ### 8.3 建议 UI 视图结构
 
-建议采用与 `TaijiMPC` 一致的“主标签页 + 子页面”方式，降低主框架接入成本。
+对于 `SoftSensorOnlineProject`，建议采用与 `TaijiMPC` 一致的“主标签页 + 子页面”方式，降低主框架接入成本。
 
 建议主标签页如下：
 
@@ -435,7 +530,7 @@ OPC-Device / OPC-Cache 选择、服务器枚举、连接检测、采样质量设
 建议定义：
 
 ```cpp
-struct SoftSensorProjectConfig {
+struct SoftSensorOnlineProjectConfig {
     BasicConfig basic;
     DataSourceConfig dataSource;
     ModelBindingConfig modelBinding;
@@ -454,7 +549,7 @@ struct SoftSensorProjectConfig {
 建议定义：
 
 ```cpp
-struct SoftSensorProjectRuntime {
+struct SoftSensorOnlineProjectRuntime {
     ProjectState state;
     std::vector<SignalRuntime> inputs;
     SignalRuntime output;
@@ -516,17 +611,28 @@ struct SoftSensorProjectRuntime {
 }
 ```
 
-## 10. 离线建模工具架构
+## 10. SoftSensorOfflineProject 架构
 
 ### 10.1 总体定位
 
-离线建模工具建议单独做成桌面工具 `xSoftSensor Studio`，不直接嵌进 `xOptCon` 主程序。
+离线建模部分不再作为独立外部工具描述，而是作为 `xOptCon` 中的本地 project 类型 `SoftSensorOfflineProject` 落地。
+
+它与以下工程并列：
+
+- `TaijiMPCProject`
+- `SoftSensorOnlineProject`
 
 原因：
 
-- 训练链路重计算，界面流程复杂
-- 依赖 Python 算法栈，和在线侧依赖应隔离
-- 工艺/算法工程师与操作员的使用场景不同
+- 满足“离线建模也是 project 类型”的统一产品形态
+- 可以复用 `xOptCon` 的 Solution、标签页、属性页、最近工程等基础能力
+- 训练链路仍然可以通过 Python sidecar 与在线侧保持执行环境分离
+
+说明：
+
+- `SoftSensorOfflineProject` 是本地工程，不依赖 HostVM
+- 它负责生成 `.ssmdl`
+- `SoftSensorOnlineProject` 负责消费 `.ssmdl`
 
 ### 10.2 工具内部模块
 
@@ -587,7 +693,7 @@ struct SoftSensorProjectRuntime {
 
 建议采用：
 
-- `Qt QProcess` 启动本地 `softsensor_worker`
+- `SoftSensorOfflineProject` 通过 `Qt QProcess` 启动本地 `softsensor_worker`
 - 命令参数传任务类型
 - 输入输出使用 JSON 文件 + CSV/Parquet 临时目录
 
@@ -933,28 +1039,44 @@ public:
 
 目标：
 
+- 支持本地工程类型与远程工程类型共存
 - 引入 `IRemoteProject`
 - 去掉 `MainWindow / ProjectHost / SolutionTreeModel / InstanceService` 对 `TaijiMPC` 的硬编码依赖
 
 交付物：
 
-- SoftSensor 可以被 ProjectFactory 注册
-- TreeView 可以显示任意项目类型实例
-- MainWindow 可以用统一流程打开远程项目
+- `SoftSensorOfflineProject` 和 `SoftSensorOnlineProject` 都可以被 ProjectFactory 注册
+- TreeView 可以同时显示本地工程节点和远程实例节点
+- MainWindow 可以用统一机制打开本地工程与远程项目
 
-### Phase 1：SoftSensor 前端骨架
+### Phase 1：双 SoftSensor Project 骨架
 
 目标：
 
-- 建立 `SoftSensorProject / SoftSensorModel / SoftSensorView`
-- 打通新建项目、打开项目、连接实例、基础页签显示
+- 建立 `SoftSensorOfflineProject / SoftSensorOfflineModel / SoftSensorOfflineView`
+- 建立 `SoftSensorOnlineProject / SoftSensorOnlineModel / SoftSensorOnlineView`
+- 打通本地工程创建、远程工程创建、基础页签显示
 
 交付物：
 
-- 能在 `xOptCon` 中新建 SoftSensor 项目
-- 能显示 General / DataSource / Model / Runtime 空页面
+- 能在 `xOptCon` 中新建两类 SoftSensor 项目
+- Offline 七步流程页和 Online 基础页签可以正常显示
 
-### Phase 2：模型导入与组态
+### Phase 2：SoftSensorOfflineProject MVP
+
+目标：
+
+- Data Import
+- Data Cleaning
+- 手工动态参数
+- LPLS 训练与评估
+- 导出 `.ssmdl`
+
+交付物：
+
+- 可以在 `SoftSensorOfflineProject` 中完成从数据到模型包的 MVP 闭环
+
+### Phase 3：SoftSensorOnlineProject 组态接入
 
 目标：
 
@@ -970,7 +1092,7 @@ public:
 - 校正策略页
 - 脚本页占位
 
-### Phase 3：HostVM MVP 在线运行
+### Phase 4：HostVM MVP 在线运行
 
 目标：
 
@@ -983,7 +1105,7 @@ public:
 - 可以用真实或仿真点位做在线预测
 - 前端可实时显示输入/输出/质量/趋势
 
-### Phase 4：校正与脚本
+### Phase 5：校正与脚本
 
 目标：
 
@@ -996,20 +1118,6 @@ public:
 
 - Calibration 页面可用
 - Init/Input/Output 脚本可验证和部署
-
-### Phase 5：离线建模工具 MVP
-
-目标：
-
-- Data Import
-- Data Cleaning
-- 手工动态参数
-- LPLS 训练与评估
-- 导出 `.ssmdl`
-
-交付物：
-
-- 可以独立生成可在线部署的模型包
 
 ### Phase 6：高级算法
 
@@ -1024,7 +1132,8 @@ public:
 
 如果目标是尽快上线一版可用系统，建议首版范围严格控制在：
 
-- 新项目类型 SoftSensor
+- 新项目类型 `SoftSensorOfflineProject`
+- 新项目类型 `SoftSensorOnlineProject`
 - 单输出软测量
 - OPC-Device / OPC-Cache
 - LPLS
@@ -1098,7 +1207,8 @@ public:
 必须覆盖以下测试：
 
 - 项目类型注册与新建
-- 实例加载与连接
+- 本地工程创建与打开
+- 远程实例加载与连接
 - `.ssmdl` 导入解析
 - 预处理一致性测试
 - LPLS 在线推断正确性
@@ -1113,8 +1223,8 @@ public:
 基于当前仓库的真实结构，SoftSensor 的正确建设路径是：
 
 1. 先把 `xOptCon` 的插件框架从“名义通用、实际偏 TaijiMPC”改成真正可并列多项目类型
-2. 再新增 `SoftSensorProject` 作为与 `TaijiMPC` 并列的应用模块
-3. 离线训练与在线运行彻底分层
+2. 再新增 `SoftSensorOfflineProject` 和 `SoftSensorOnlineProject` 作为与 `TaijiMPCProject` 并列的两种工程类型
+3. 通过本地工程类型和远程工程类型的共存，容纳“离线建模”和“在线组态”两种不同生命周期
 4. 用统一 `.ssmdl` 模型包打通离线与在线
 5. 训练侧使用 Python 提升算法交付速度，在线侧使用 C++/ONNX Runtime 保证工业稳定性
 
