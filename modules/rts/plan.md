@@ -48,11 +48,13 @@
 
 ### 2.3 流程图全局功能不完整（高优先级）
 
-设计 §1：
-- ✅ 全局变量表：`RtsModel::variables_` + `RtsVariablePanel` 已具雏形（但仅 name/init 文本）。
+设计 §1 要求的全局功能 = **选择流程 + 全局变量表 + 数据源(位号)定义与变量关联**，且**统一通过画布右键菜单调出"全局设置对话框"完成配置**。
+
+- ❌ **流程选择（新增要求）**：需通过平台 `getFlowSheetInfo` 列举可用流程供选择，作为整个 RTS 项目操作的目标流程。当前无此功能，宏/求解里 `flowSheetName` 写死为 `"FlowSheet"`。
+- ✅/⚠️ **全局变量表**：`RtsModel::variables_` + `RtsVariablePanel` 已具雏形（但仅 name/init 文本）。
 - ❌ **变量↔位号关联**：变量结构无位号绑定字段。
 - ❌ **数据源位号定义**：`RtsDataSource{name,type,connection}` 无位号清单；CSV/OPC 均未实现实际读写。
-- ❌ **数据源 UI**：无数据源管理面板（仅节点属性对话框里填字符串）。
+- ❌ **交互方式不符**：设计要求全局设置经**画布右键 → 设置对话框**进入；当前仅有一个常驻侧边 `RtsVariablePanel`（只管变量），无右键入口、无流程选择、无数据源管理 UI。需新建统一的"全局设置对话框"（含：流程选择 / 全局变量表 / 数据源与位号 / 变量-位号关联四个分页），并在 `RtsScene` 右键菜单挂入口。
 
 ### 2.4 启动模式 / 调度缺失（高优先级）
 
@@ -61,11 +63,12 @@
 ### 2.5 未使用的平台回调（中优先级）
 
 `xRtsCallbackInterface` 中以下方法**从未被调用**：
-- `getFlowSheetInfo` / `getFlowSheetComputeTask` / `setCurrentComputeTask`（→ 计算任务选择模块依赖）
+- `getFlowSheetInfo`（→ **全局流程选择**（§2.3 新增）与各模块流程上下文依赖）
+- `getFlowSheetComputeTask` / `setCurrentComputeTask`（→ 计算任务选择模块依赖）
 - `getMacroInfo`（→ 宏模块下拉选择依赖）
 - `saveRts`（→ 应在导出/编辑后落盘持久化）
 
-宏/求解模块当前 `callMacro`/`solve` 的 `flowSheetName` 写死为 `"FlowSheet"`，应来自 `getFlowSheetInfo`。
+宏/求解模块当前 `callMacro`/`solve` 的 `flowSheetName` 写死为 `"FlowSheet"`，应改为取自全局选择的流程。
 
 ### 2.6 工程化缺失（中优先级）
 
@@ -95,26 +98,33 @@
    - **Solve**：求解参数名值对绑定变量 → 读变量填参 → `solve` → 解析结果 JSON 回写到结果变量。
 8. 同步更新 `RtsStyle`（颜色/标签）、`RtsNodeToolBox`（工具箱条目）、`DialogRtsNode`（各模块专属配置页）。
 
-### 阶段 2：全局变量与数据源
-9. 扩展数据源模型：CSV/OPC 连接 + **位号清单**；实现 CSV 读写，OPC 预留抽象接口（优先 libzce 既有能力，见 LIBZCE.md）。
-10. 变量模型增加**位号绑定**字段；变量面板支持绑定编辑。
-11. 新增**数据源管理面板**（增删数据源、维护位号、变量关联）。
-12. Input/Output 模块支持"全部/部分"位号读写选择。
+### 阶段 2：全局设置对话框（流程选择 + 变量 + 数据源/位号）
+> 交互入口统一为**画布右键 → "全局设置…"**，弹出多分页 `DialogRtsGlobalSettings`。
+
+9. Model 增加全局字段：`selected_flowsheet`（当前流程）；数据源模型扩展为 CSV/OPC 连接 + **位号清单**；变量模型增加**位号绑定**（数据源名 + 位号 + 读/写方向）。同步更新 `exportToJson/importFromJson`。
+10. 在 `RtsScene` 右键菜单加入"全局设置…"入口，新建 `DialogRtsGlobalSettings`，含四个分页：
+    - **流程选择**：`getFlowSheetInfo` 列举 → 下拉选择，写入 `selected_flowsheet`。
+    - **全局变量表**：迁移/复用现有 `RtsVariablePanel` 能力（名/初值）。
+    - **数据源**：增删 CSV/OPC 数据源、维护位号清单。
+    - **变量-位号关联**：把变量绑定到某数据源位号。
+11. 实现数据源读写：CSV 实读实写；OPC 预留抽象接口（优先 libzce 既有能力，见 LIBZCE.md）。
+12. Input/Output 模块支持"全部/部分"位号读写选择（基于上面的绑定关系）。
+13. 评估常驻侧边 `RtsVariablePanel` 去留（建议改由全局对话框统一管理，或保留为只读速览）。
 
 ### 阶段 3：启动模式与调度
-13. 实现 Start 四种启动模式配置 + Engine 调度循环（结束后/周期/整点）。
-14. 画布上直观显示当前模式与**下次启动时间**（节点绘制 + 定时刷新）。
-15. 调度使用 `zce::Timer` 或 `QTimer`（避免 sleep 轮询，参考 CLAUDE.md/libzce 约定）。
+14. 实现 Start 四种启动模式配置 + Engine 调度循环（结束后/周期/整点）。
+15. 画布上直观显示当前模式与**下次启动时间**（节点绘制 + 定时刷新）。
+16. 调度使用 `zce::Timer` 或 `QTimer`（避免 sleep 轮询，参考 CLAUDE.md/libzce 约定）。
 
 ### 阶段 4：平台回调闭环与持久化
-16. 接入 `getFlowSheetInfo`/`getMacroInfo`/`getFlowSheetComputeTask` 驱动各模块的下拉选择，去除写死的 `"FlowSheet"`。
-17. 在导出/重要编辑后调用 `saveRts` 持久化。
-18. 明确并落实 Engine→平台回调的线程模型。
+17. 接入 `getMacroInfo`/`getFlowSheetComputeTask` 驱动宏/计算任务模块的下拉选择，各模块流程上下文统一取自全局选择的流程（去除写死的 `"FlowSheet"`）。
+18. 在导出/重要编辑后调用 `saveRts` 持久化。
+19. 明确并落实 Engine→平台回调的线程模型。
 
 ### 阶段 5：工程化与测试
-19. 新增 `tests/`，按 CLAUDE.md 规范（`test_*.cpp`、`#ifndef USE_GTEST_MAIN`、`TEST_F`）覆盖 Model、Engine、各模块执行、序列化往返。
-20. 添加 CMakeLists.txt 并接入 `build.sh`，统一 include 路径（`include/xOpt/xRtsInterface.h`），实现 Linux 可构建。
-21. 全量代码确认 UTF-8 + BOM、命名规范（类 PascalCase / 函数 camelCase / 变量 snake_case / 成员尾下划线）。
+20. 新增 `tests/`，按 CLAUDE.md 规范（`test_*.cpp`、`#ifndef USE_GTEST_MAIN`、`TEST_F`）覆盖 Model、Engine、各模块执行、序列化往返。
+21. 添加 CMakeLists.txt 并接入 `build.sh`，统一 include 路径（`include/xOpt/xRtsInterface.h`），实现 Linux 可构建。
+22. 全量代码确认 UTF-8 + BOM、命名规范（类 PascalCase / 函数 camelCase / 变量 snake_case / 成员尾下划线）。
 
 ## 四、优先级建议
 
