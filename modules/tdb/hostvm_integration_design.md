@@ -29,7 +29,7 @@
 - xTdb 已有 core + api（`libxtdb`），并提供两套对外协议：
   - **REST 管理面**：`rest_server.{h,cpp}`（`/api/v1/db|stats|containers|data|maintenance`）。
   - **xds 二进制数据面**：`server/xds.ptl`（高频写 / 范围查询，自带帧头 + CRC + ZDS payload）。
-- 已有共享静态库 **`xtdb_server_lib`**（`rest_server.cpp` + `data_server.cpp` + `xds_pack.cpp`）与独立守护进程 **`xtdbd`**（`server/src/main.cpp`）。见 `server/CMakeLists.txt`。
+- 已有 **`xtdb`（libtdb）** 含引擎 + api + REST/XDS 管理面（`rest_server.{h,cpp}`、`data_server`、`xds_pack`），以及独立守护进程 **`xtdbd`**（`server/src/main.cpp`）。见根 `CMakeLists.txt` 与 `server/CMakeLists.txt`。
 - `main.cpp` **已实现 zmis 自注册**：`--instance-name / --zmis-host / --zmis-port / --advertise-addr`，
   通过 `zmisRegister()` 用 `VirtualMachineStub` 连 zmis 并 announce（`server/src/main.cpp:155,183`）。
 
@@ -124,7 +124,7 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
 
 ### 3.1 “一个 Ops 门面 + 三个传输适配器”
 
-> 核心原则：**业务逻辑只在 `xtdb_server_lib` 实现一次**；REST / xds / ZVM-RPC 都是 **薄适配器**。
+> 核心原则：**业务逻辑只在 `xtdb`（含 server 层 / `XtdbOps`）实现一次**；REST / xds / ZVM-RPC 都是 **薄适配器**。
 
 ```
                          ┌─────────────────────────────────────────────┐
@@ -132,7 +132,7 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
                          └─────────────────────────────────────────────┘
                                               ▲
                          ┌─────────────────────────────────────────────┐
-                         │  xtdb_server_lib  (唯一业务实现 / Ops 门面)   │
+                         │  xtdb (libtdb：引擎 + REST/XDS + Ops 门面)   │
                          │  open/close · stats · containers · write     │
                          │  query · flush · retention/reclaim/seal      │
                          │  token store                                 │
@@ -145,7 +145,7 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
 
 ```
  ┌──────────────────────────── Standalone（保持不变）───────────────────────────┐
- │  xtdbd  =  xtdb_server_lib + REST + xds  (+ 可选 zmis announce)                │
+ │  xtdbd  =  xtdb + main  (+ 可选 zmis announce)                │
  │  不链接 xtdb_vm_lib；无监管；独立部署/CI/测试                                   │
  └───────────────────────────────────────────────────────────────────────────────┘
 
@@ -176,11 +176,10 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
 
 | 目标 | 类型 | 组成 | 依赖 | 说明 |
 |---|---|---|---|---|
-| `xtdb` (`libxtdb`) | static | 引擎 + api | — | 已存在 |
-| `xtdb_server_lib` | static | rest_server + data_server + xds_pack + **Ops 门面** | xtdb, zce | 已存在；**抽出 Ops 门面**（§4.3） |
-| **`xtdb_vm_lib`** | static | **新增** `xtdb_vm.cpp` + `xtdb_vm_rpc.cpp` + `xtdb_vm_pack.cpp` + 注册 + `xtdb_vm_init` | xtdb_server_lib, zce(zvm) | **本期新增**；控制面全部在此；**被 HostVM 链接** |
-| `xtdbd` | exe | `main.cpp` | xtdb_server_lib | 已存在；**不链接 `xtdb_vm_lib`** |
-| `hostvm.bin` | exe | HostVM | 各模块 VM lib **+ 新增 `xtdb_vm_lib`** | **改动**：加链接 + `xtdb_vm_init()`（照 `zmpc`） |
+| `xtdb` (`libtdb`) | static | 引擎 + api + **REST/XDS 管理面**（`rest_server` / `data_server` / `xds_pack` / `XtdbOps`） | zce, nlohmann_json, … | 单一静态库；server 源码已并入 |
+| **`xtdb_vm_lib`** | static | `xtdb_vm.cpp` + `xtdb_vm_rpc.cpp` + `xtdb_vm_pack.cpp` + 注册 + `xtdb_vm_init` | xtdb | HostVM 专用 ZVM 套壳；**被 HostVM 链接** |
+| `xtdbd` | exe | `main.cpp` | xtdb | 独立守护进程；**不链接 `xtdb_vm_lib`** |
+| `hostvm.bin` | exe | HostVM | 各模块 VM lib **+ `xtdb_vm_lib` + `xtdb`** | 链接 + `xtdb_vm_init()`（照 `zmpc`） |
 
 > ⚠️ 模型 A 下 **没有独立 `xtdbvm` 可执行文件**；嵌入态 VM 代码随 `hostvm.bin` 一起编译/部署，
 > 运行时以“重生的 `hostvm.bin work`”子进程承载。
@@ -188,7 +187,7 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
 ### 4.2 硬约束（保证“分开编译、互不强依赖”）
 
 1. `xtdbd` **绝不** 链接 `xtdb_vm_lib` —— standalone 二进制内 **不含** HostVM 控制面代码。
-2. `xtdb_server_lib` **不依赖** `xtdb_vm_lib`/HostVM —— 保持可独立 gtest。
+2. `xtdb`（含 server 源码）**不依赖** `xtdb_vm_lib`/HostVM —— REST/XDS 测试链 `xtdb` 即可。
 3. `xtdb_vm_lib` 可独立构建（`cmake --build . --target xtdb_vm_lib`），不触发 `xtdbd`。
 4. Windows 侧新增 `libxtdb_vm.vcxproj`；HostVM 工程增加对其引用 + `xtdb_vm_init` 调用。
 5. 可选宏 `XTDB_WITH_HOSTVM`：仅 `xtdb_vm_lib` 定义，`#ifdef` 包裹 zvm/Storm include，便于裁剪。
@@ -196,7 +195,7 @@ extern "C" int xtdb_vm_init();   // 触碰注册符号，防链接器 GC（logco
 > 说明：zce/zvm 本就是 standalone 既有依赖（`xtdbd` 已用 zce reactor/http，且 `zmisRegister` 已用 `VirtualMachineStub`）。
 > “分开编译”的目的是隔离 **`XTdbMachine` + VM 注册 + 控制面 handler**，使 standalone 无 HostVM 业务耦合、可独立回归。
 
-### 4.3 `xtdb_server_lib` 的小重构（P0，不改行为）
+### 4.3 `XtdbOps` 门面（P0，不改行为）
 
 把 REST handler 内联的业务调用，**收敛为稳定 Ops 门面**（被 REST 与 ZVM-RPC 共用）：
 
